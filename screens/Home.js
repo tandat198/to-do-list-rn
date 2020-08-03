@@ -1,25 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-elements";
+import { Text, ListItem, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function Home() {
+    const tasks = [
+        {
+            id: 1,
+            name: "Do something",
+            isDone: false,
+        },
+        {
+            id: 2,
+            name: "Do Something else",
+            isDone: true,
+        },
+    ];
+
+    const TaskItem = ({ task }) => (
+        <View style={styles.listItem}>
+            <CheckBox style={styles.checkBox} checked={task.isDone} />
+            <Text h4>{task.name}</Text>
+        </View>
+    );
+
     return (
         <View style={style.container}>
             <View style={style.titleContainer}>
                 <Text h2>My Tasks</Text>
             </View>
             <View>
-                <Button
-                    icon={{
-                        name: "plus",
-                        size: 15,
-                        color: "white",
-                    }}
-                    title='Add Task'
-                />
+                <Button icon={<Icon name='plus' size={15} color='white' />} title='Add Task' />
             </View>
-            <View></View>
+            <View>
+                <FlatList keyExtractor={(item) => item.id.toString()} data={tasks} renderItem={TaskItem} />
+            </View>
         </View>
     );
 }
@@ -30,5 +45,12 @@ const styles = StyleSheet.create({
     },
     titleContainer: {
         textAlign: "center",
+    },
+    checkBox: {
+        marginRight: 5,
+    },
+    listItem: {
+        flexDirection: "row",
+        flexWrap: "nowrap",
     },
 });
