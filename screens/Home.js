@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, FlatList, ScrollView } from "react-native";
-import { Text, Button, Overlay, Input, CheckBox } from "react-native-elements";
+import { StyleSheet, View, FlatList, SafeAreaView } from "react-native";
+import { Text, Button, Overlay, Input, CheckBox, Divider } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { getTasks, createTask, clearErrors, updateTask } from "../redux/actions";
+import TaskItem from "../components/TaskItem";
 
 export default function Home() {
     const [visibleCreateOverlay, setVisibleCreateOverlay] = useState(false);
     const [taskName, setTaskName] = useState("");
     const [nameErrorMessage, setNameErrorMessage] = useState("");
+
     const dispatch = useDispatch();
+
     const tasks = useSelector((state) => state.tasks);
     const isLoading = useSelector((state) => state.isLoading);
     const isCreating = useSelector((state) => state.isCreating);
     const isSuccess = useSelector((state) => state.isSuccess);
     const errors = useSelector((state) => state.errors);
+    const isUpdating = useSelector((state) => state.isUpdating);
 
     const toggleOverlayCreate = () => {
         if (visibleCreateOverlay) {
@@ -28,20 +32,9 @@ export default function Home() {
         setTaskName("");
     };
 
-    const submitUpdateStatus = (id, isDone) => {
-        dispatch(updateTask(id, { isDone }));
+    const submitUpdateStatus = (id, index, isDone) => {
+        dispatch(updateTask(id, index, { isDone }));
     };
-
-    const TaskItem = ({ item }) => (
-        <View style={styles.listItem}>
-            <CheckBox
-                onPress={() => submitUpdateStatus(item.id, !item.isDone)}
-                style={styles.checkBox}
-                checked={item.isDone}
-            />
-            <Text h4>{item.name}</Text>
-        </View>
-    );
 
     useEffect(() => {
         dispatch(getTasks());
@@ -70,7 +63,8 @@ export default function Home() {
                     My Tasks
                 </Text>
             </View>
-            <View>
+            <Divider style={{ marginVertical: 10 }} />
+            <View style={{ paddingHorizontal: 20 }}>
                 <Button
                     onPress={toggleOverlayCreate}
                     icon={<Icon name='plus' size={15} color='white' />}
@@ -79,12 +73,29 @@ export default function Home() {
                 />
             </View>
             {isLoading ? <Text style={{ textAlign: "center" }}>Loading...</Text> : null}
-            <ScrollView style={styles.list}>
-                <FlatList keyExtractor={(item) => item.id.toString()} data={tasks} renderItem={TaskItem} />
-            </ScrollView>
+            <SafeAreaView style={styles.list}>
+                <FlatList
+                    keyExtractor={(item) => item.id}
+                    data={tasks}
+                    renderItem={({ item, index }) => <TaskItem item={item} index={index} />}
+                />
+            </SafeAreaView>
             {errors.getDataFail ? (
                 <View>
-                    <Button title='Reload' />
+                    <Button onPress={() => dispatch(getTasks())} title='Reload' />
+                </View>
+            ) : null}
+            {isUpdating ? (
+                <View
+                    style={{
+                        position: "absolute",
+                        bottom: 0,
+                        backgroundColor: "#2089DC",
+                        paddingVertical: 10,
+                        width: "100%",
+                    }}
+                >
+                    <Text style={{ textAlign: "center" }}>Updating...</Text>
                 </View>
             ) : null}
             <Overlay
@@ -102,14 +113,15 @@ export default function Home() {
                         />
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Button raised onPress={toggleOverlayCreate} title='Cancel' />
+                        <Button type='outline' onPress={toggleOverlayCreate} title='Cancel' />
                         <Button
                             raised
                             onPress={submitCreateTask}
-                            icon={isCreating ? null : <Icon name='plus' size={15} color='white' />}
-                            title={isCreating ? "Adding..." : "Add  "}
+                            title='Add Task'
                             disabled={isCreating}
+                            loading={isCreating}
                             iconRight
+                            loadingStyle={{ paddingHorizontal: 20 }}
                         />
                     </View>
                 </View>
@@ -132,11 +144,13 @@ const styles = StyleSheet.create({
     list: {
         marginTop: 20,
         paddingVertical: 10,
+        flex: 1,
     },
     listItem: {
         flexDirection: "row",
         flexWrap: "nowrap",
-        alignItems: "baseline",
+        alignItems: "center",
+        marginRight: 20,
     },
     overlay: {
         width: "80%",
@@ -148,5 +162,12 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: "row",
         justifyContent: "space-around",
+    },
+    leftItem: {
+        width: "95%",
+        flexDirection: "row",
+    },
+    rightItem: {
+        width: "5%",
     },
 });

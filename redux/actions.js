@@ -26,7 +26,7 @@ export const createTask = (task) => async (dispatch) => {
     dispatch({
         type: actionTypes.CREATE_TODO_START,
     });
-    console.log(task);
+
     try {
         const res = await axios.post("https://code-class.herokuapp.com/api/tasks", task);
         dispatch({
@@ -43,7 +43,7 @@ export const createTask = (task) => async (dispatch) => {
 
 export const clearErrors = () => ({ type: actionTypes.CLEAR_ERRORS });
 
-export const updateTask = (id, data) => async (dispatch) => {
+export const updateTask = (id, index, data) => async (dispatch) => {
     dispatch({
         type: actionTypes.UPDATE_TODO_START,
     });
@@ -55,7 +55,7 @@ export const updateTask = (id, data) => async (dispatch) => {
             type: actionTypes.UPDATE_TODO_SUCCESS,
             payload: {
                 data,
-                id,
+                index,
             },
         });
     } catch (error) {

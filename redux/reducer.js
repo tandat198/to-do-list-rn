@@ -6,6 +6,7 @@ const INITIAL_STATE = {
     isCreating: false,
     errors: {},
     isSuccess: false,
+    isUpdating: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -53,18 +54,24 @@ export default function (state = INITIAL_STATE, action) {
                 ...state,
                 errors: {},
             };
+        case actionTypes.UPDATE_TODO_START:
+            return {
+                ...state,
+                isUpdating: true,
+            };
         case actionTypes.UPDATE_TODO_SUCCESS:
             const tasks = state.tasks;
-            const index = tasks.findIndex((task) => task.id === action.payload.id);
+            const { data, index } = action.payload;
 
             tasks[index] = {
                 ...tasks[index],
-                ...action.payload.data,
+                isDone: data.isDone,
             };
 
             return {
                 ...state,
-                tasks,
+                tasks: tasks.concat([]),
+                isUpdating: false,
             };
         default:
             return state;
