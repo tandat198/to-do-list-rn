@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text, ListItem, Button } from "react-native-elements";
+import { Text, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function Home() {
+    const [visibleCreateOverlay, setVisibleCreateOverlay] = useState(false);
+
     const tasks = [
         {
             id: 1,
@@ -16,6 +18,10 @@ export default function Home() {
             isDone: true,
         },
     ];
+
+    const toggleOverlayCreate = () => {
+        setVisibleCreateOverlay(!visibleCreateOverlay);
+    };
 
     const TaskItem = ({ task }) => (
         <View style={styles.listItem}>
@@ -30,11 +36,19 @@ export default function Home() {
                 <Text h2>My Tasks</Text>
             </View>
             <View>
-                <Button icon={<Icon name='plus' size={15} color='white' />} title='Add Task' />
+                <Button
+                    onPress={toggleOverlayCreate}
+                    icon={<Icon name='plus' size={15} color='white' />}
+                    title='Add Task'
+                />
             </View>
             <View>
                 <FlatList keyExtractor={(item) => item.id.toString()} data={tasks} renderItem={TaskItem} />
             </View>
+            <Overlay isVisible={visibleCreateOverlay} onBackdropPress={toggleOverlayCreate}>
+                <Input placeholder='Your Task' />
+                <Button onPress={toggleOverlayCreate} icon={<Icon name='plus' size={15} color='white' />} title='Add' />
+            </Overlay>
         </View>
     );
 }
