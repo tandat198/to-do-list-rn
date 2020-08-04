@@ -27,3 +27,4 @@ export const SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS";
 export const SIGN_UP_FAILURE = "SIGN_UP_FAILURE";
 
 export const SET_USER = "SET_USER";
+export const SET_USER_FAIL = "SET_USER_FAIL";

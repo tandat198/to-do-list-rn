@@ -10,6 +10,7 @@ const INITIAL_STATE = {
     isSuccess: false,
     isUpdating: false,
     isDeleting: false,
+    checkedUser: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -143,6 +144,12 @@ export default function (state = INITIAL_STATE, action) {
                 ...state,
                 currentUser: action.payload,
                 isAuthenticated: true,
+                checkedUser: true,
+            };
+        case actionTypes.SET_USER_FAIL:
+            return {
+                ...state,
+                checkedUser: true,
             };
         default:
             return state;

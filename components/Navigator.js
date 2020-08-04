@@ -8,32 +8,26 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
 import { checkUser } from "../redux/actions";
-import { AsyncStorage } from "react-native";
+import { Image, View } from "react-native";
+import { AppLoading } from "expo";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function Navigator() {
     const isAuthenticated = useSelector((state) => state.isAuthenticated);
+    const checkedUser = useSelector((state) => state.checkedUser);
     const dispatch = useDispatch();
 
-    const authenticate = async (Screen) => {
-        try {
-            const token = await AsyncStorage.getItem("token");
-
-            if (token && jwt_decode(token).exp > Date.now() / 1000) {
-                return Screen();
-            } else {
-                return <View />;
-            }
-        } catch (error) {
-            return <View />;
-        }
+    const SplashScreen = () => {
+        return <AppLoading />;
     };
 
     useEffect(() => {
         dispatch(checkUser());
     }, [dispatch]);
+
+    if (!checkedUser) return <SplashScreen />;
 
     if (isAuthenticated) {
         return (
@@ -65,7 +59,7 @@ export default function Navigator() {
 
     return (
         <Stack.Navigator>
-            <Stack.Screen name='Sign In' component={authenticate(SignIn)} />
+            <Stack.Screen name='Sign In' component={SignIn} />
             <Stack.Screen name='Sign Up' component={SignUp} />
         </Stack.Navigator>
     );

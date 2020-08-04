@@ -149,8 +149,10 @@ export const checkUser = () => async (dispatch) => {
             dispatch({ type: actionTypes.SET_USER, payload: user });
         } else {
             await AsyncStorage.removeItem("token");
+            dispatch({ type: actionTypes.SET_USER_FAIL });
         }
     } catch (error) {
         await AsyncStorage.removeItem("token");
+        dispatch({ type: actionTypes.SET_USER_FAIL });
     }
 };
