@@ -15,6 +15,7 @@ const Stack = createStackNavigator();
 
 export default function Navigator() {
     const isAuthenticated = useSelector((state) => state.isAuthenticated);
+    const checkedUser = useSelector((state) => state.checkedUser);
     const dispatch = useDispatch();
 
     const SplashScreen = () => {
