@@ -99,7 +99,6 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 isLoading: true,
-                errors: {},
             };
         case actionTypes.SIGN_IN_SUCCESS:
             return {
@@ -125,7 +124,6 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 isLoading: true,
-                errors: {},
             };
         case actionTypes.SIGN_UP_SUCCESS:
             return {

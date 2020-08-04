@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Home from "../screens/Home";
-import Setting from "../screens/Setting";
+import Account from "../screens/Account";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -43,7 +43,7 @@ export default function BottomTabNav() {
                 }}
             >
                 <Tab.Screen name='Home' component={Home} />
-                <Tab.Screen name='Account' component={Setting} />
+                <Tab.Screen name='Account' component={Account} />
             </Tab.Navigator>
         );
     }

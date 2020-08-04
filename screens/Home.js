@@ -47,7 +47,7 @@ export default function Home() {
 
     useEffect(() => {
         if (isSuccess) {
-            toggleOverlayCreate();
+            setVisibleCreateOverlay(false);
         }
     }, [isSuccess]);
 

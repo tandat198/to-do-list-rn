@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Input, Button } from "react-native-elements";
+import { Input, Button, Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp, clearErrors } from "../redux/actions";
 
@@ -141,6 +141,18 @@ export default function SignUp({ navigation }) {
                     titleStyle={styles.buttonTitleStyle}
                     title='Sign Up'
                 />
+            </View>
+            <View
+                style={{
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 10,
+                }}
+            >
+                <Text>You have an account?</Text>
+                <Button onPress={() => navigation.navigate("Sign In")} title='Sign In' type='clear'></Button>
             </View>
         </View>
     );

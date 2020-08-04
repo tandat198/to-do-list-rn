@@ -105,19 +105,13 @@ export default function SignIn({ navigation }) {
                     disabled={isLoading}
                     loading={isLoading}
                     onPress={submitSignIn}
+                    loadingStyle={{ height: 26 }}
                     titleStyle={styles.buttonTitleStyle}
+                    style={styles.buttonStyle}
                     title='Sign In'
                 />
             </View>
-            <View
-                style={{
-                    flexDirection: "row",
-                    flexWrap: "nowrap",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: 10,
-                }}
-            >
+            <View style={styles.navigateContainer}>
                 <Text>You don't have an account?</Text>
                 <Button onPress={navigateToSignUp} title='Sign Up Now' type='clear'></Button>
             </View>
@@ -140,7 +134,17 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginTop: 20,
     },
+    buttonStyle: {
+        height: 25,
+    },
     buttonTitleStyle: {
         fontSize: 20,
+    },
+    navigateContainer: {
+        flexDirection: "row",
+        flexWrap: "nowrap",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 10,
     },
 });
