@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, FlatList, SafeAreaView } from "react-native";
-import { Text, Button, Overlay, Input, CheckBox, Divider } from "react-native-elements";
+import { Text, Button, Overlay, Input, Divider } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
-import { getTasks, createTask, clearErrors, updateTask } from "../redux/actions";
+import { getTasks, createTask, clearErrors } from "../redux/actions";
 import TaskItem from "../components/TaskItem";
 
 export default function Home() {
     const [visibleCreateOverlay, setVisibleCreateOverlay] = useState(false);
     const [taskName, setTaskName] = useState("");
     const [nameErrorMessage, setNameErrorMessage] = useState("");
+    const [bottomMessage, setBottomMessage] = useState("");
 
     const dispatch = useDispatch();
 
@@ -19,6 +20,7 @@ export default function Home() {
     const isSuccess = useSelector((state) => state.isSuccess);
     const errors = useSelector((state) => state.errors);
     const isUpdating = useSelector((state) => state.isUpdating);
+    const isDeleting = useSelector((state) => state.isDeleting);
 
     const toggleOverlayCreate = () => {
         if (visibleCreateOverlay) {
@@ -28,12 +30,15 @@ export default function Home() {
     };
 
     const submitCreateTask = () => {
-        dispatch(createTask({ name: taskName }));
-        setTaskName("");
-    };
-
-    const submitUpdateStatus = (id, index, isDone) => {
-        dispatch(updateTask(id, index, { isDone }));
+        if (taskName.length >= 5) {
+            dispatch(createTask({ name: taskName }));
+            setTaskName("");
+            setNameErrorMessage("");
+        } else if (taskName.length === 0) {
+            setNameErrorMessage("Task name is required");
+        } else {
+            setNameErrorMessage("Task name is too short");
+        }
     };
 
     useEffect(() => {
@@ -48,22 +53,32 @@ export default function Home() {
 
     useEffect(() => {
         if (errors.name && errors.name.includes("required")) {
-            setNameErrorMessage("Name is required");
+            setNameErrorMessage("Task name is required");
         } else if (errors.name && errors.name.includes("invalid")) {
-            setNameErrorMessage("Name is invalid");
+            setNameErrorMessage("Task name is invalid");
         } else {
             setNameErrorMessage("");
         }
     }, [errors.name]);
 
+    useEffect(() => {
+        if (isDeleting) {
+            setBottomMessage("Removing ...");
+        } else if (isUpdating) {
+            setBottomMessage("Updating ...");
+        } else {
+            setBottomMessage("");
+        }
+    }, [isDeleting, isUpdating]);
+
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View>
                 <Text style={styles.title} h2>
                     My Tasks
                 </Text>
             </View>
-            <Divider style={{ marginVertical: 10 }} />
+            <Divider style={{ marginVertical: 10, marginHorizontal: 20 }} />
             <View style={{ paddingHorizontal: 20 }}>
                 <Button
                     onPress={toggleOverlayCreate}
@@ -85,7 +100,7 @@ export default function Home() {
                     <Button onPress={() => dispatch(getTasks())} title='Reload' />
                 </View>
             ) : null}
-            {isUpdating ? (
+            {isUpdating || isDeleting ? (
                 <View
                     style={{
                         position: "absolute",
@@ -95,7 +110,7 @@ export default function Home() {
                         width: "100%",
                     }}
                 >
-                    <Text style={{ textAlign: "center" }}>Updating...</Text>
+                    <Text style={{ textAlign: "center" }}>{bottomMessage}</Text>
                 </View>
             ) : null}
             <Overlay
@@ -108,7 +123,7 @@ export default function Home() {
                         <Input
                             placeholder='Your Task'
                             onChangeText={(text) => setTaskName(text)}
-                            renderErrorMessage={errors.name ? true : false}
+                            renderErrorMessage={nameErrorMessage ? true : false}
                             errorMessage={nameErrorMessage}
                         />
                     </View>
@@ -126,17 +141,17 @@ export default function Home() {
                     </View>
                 </View>
             </Overlay>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 10,
+        paddingTop: 30,
     },
     title: {
-        textAlign: "center",
+        marginLeft: 20,
     },
     checkBox: {
         marginRight: 10,

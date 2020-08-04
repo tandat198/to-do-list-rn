@@ -1,9 +1,18 @@
 import React, { PureComponent } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text, CheckBox } from "react-native-elements";
+import { Text, CheckBox, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { connect } from "react-redux";
+import { updateTask, deleteTask } from "../redux/actions";
 
-export default class TaskList extends PureComponent {
+class TaskList extends PureComponent {
+    submitUpdateStatus = (id, index, isDone) => {
+        this.props.updateTaskReq(id, index, { isDone });
+    };
+    submitDelTask = (id) => {
+        this.props.deleteTaskReq(id);
+    };
+
     render() {
         const { item, index } = this.props;
 
@@ -11,7 +20,7 @@ export default class TaskList extends PureComponent {
             <View style={styles.listItem}>
                 <View style={styles.leftItem}>
                     <CheckBox
-                        onPress={() => submitUpdateStatus(item.id, index, !item.isDone)}
+                        onPress={() => this.submitUpdateStatus(item.id, index, !item.isDone)}
                         style={styles.checkBox}
                         checked={item.isDone}
                     />
@@ -20,7 +29,11 @@ export default class TaskList extends PureComponent {
                     </Text>
                 </View>
                 <View style={styles.rightItem}>
-                    <Icon name='times' size={15} color='black' />
+                    <Button
+                        type='clear'
+                        icon={<Icon name='times' size={15} color='black' />}
+                        onPress={() => this.submitDelTask(item.id)}
+                    />
                 </View>
             </View>
         );
@@ -40,10 +53,17 @@ const styles = StyleSheet.create({
     },
 
     leftItem: {
-        width: "95%",
+        width: "90%",
         flexDirection: "row",
     },
     rightItem: {
-        width: "5%",
+        width: "10%",
     },
 });
+
+const mapDispatchToProps = (dispatch) => ({
+    updateTaskReq: (id, index, data) => dispatch(updateTask(id, index, data)),
+    deleteTaskReq: (id) => dispatch(deleteTask(id)),
+});
+
+export default connect(null, mapDispatchToProps)(TaskList);
