@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, FlatList, SafeAreaView } from "react-native";
-import { Text, Button, Overlay, Input, Divider } from "react-native-elements";
+import { StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator } from "react-native";
+import { Text, Button, Overlay, Input, Divider, Image } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { getTasks, createTask, clearErrors } from "../redux/actions";
@@ -21,6 +21,7 @@ export default function Home() {
     const errors = useSelector((state) => state.errors);
     const isUpdating = useSelector((state) => state.isUpdating);
     const isDeleting = useSelector((state) => state.isDeleting);
+    const [imgUrl, setImgUrl] = useState("");
 
     const toggleOverlayCreate = () => {
         if (visibleCreateOverlay) {
@@ -43,6 +44,9 @@ export default function Home() {
 
     useEffect(() => {
         dispatch(getTasks());
+        setTimeout(() => {
+            setImgUrl("https://tutorial-dnt.s3.amazonaws.com/images/a0fa6ad2-59dd-4e6f-815b-5303853f87d3.png");
+        }, 1500);
     }, [dispatch]);
 
     useEffect(() => {
@@ -87,6 +91,7 @@ export default function Home() {
                     iconRight
                 />
             </View>
+
             {isLoading ? <Text style={{ textAlign: "center" }}>Loading...</Text> : null}
             <SafeAreaView style={styles.list}>
                 <FlatList

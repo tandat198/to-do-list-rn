@@ -8,13 +8,25 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
 import { checkUser } from "../redux/actions";
+import { Image, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export default function BottomTabNav() {
+export default function Navigator() {
     const isAuthenticated = useSelector((state) => state.isAuthenticated);
     const dispatch = useDispatch();
+
+    const AuthScreen = () => {
+        return (
+            <View style={{ flex: 1 }}>
+                <Image
+                    source={{ uri: require("../assets/splash.png") }}
+                    style={{ position: "absolute", top: "50%", left: "50%", translateX: "-50%", translateY: "-50%" }}
+                />
+            </View>
+        );
+    };
 
     useEffect(() => {
         dispatch(checkUser());
@@ -50,6 +62,7 @@ export default function BottomTabNav() {
 
     return (
         <Stack.Navigator>
+            <Stack.Screen name='Auth' component={AuthScreen} options={{ headerShown: false }} />
             <Stack.Screen name='Sign In' component={SignIn} />
             <Stack.Screen name='Sign Up' component={SignUp} />
         </Stack.Navigator>
