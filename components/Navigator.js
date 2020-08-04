@@ -17,12 +17,11 @@ export default function Navigator() {
     const isAuthenticated = useSelector((state) => state.isAuthenticated);
     const dispatch = useDispatch();
 
-    const AuthScreen = () => {
+    const SplashScreen = () => {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                 <Image
                     source={{ uri: require("../assets/splash.png") }}
-                    style={{ position: "absolute", top: "50%", left: "50%", translateX: "-50%", translateY: "-50%" }}
                 />
             </View>
         );
@@ -31,6 +30,8 @@ export default function Navigator() {
     useEffect(() => {
         dispatch(checkUser());
     }, [dispatch]);
+
+    if(checkedUser) return <SplashScreen />
 
     if (isAuthenticated) {
         return (
@@ -62,7 +63,6 @@ export default function Navigator() {
 
     return (
         <Stack.Navigator>
-            <Stack.Screen name='Auth' component={AuthScreen} options={{ headerShown: false }} />
             <Stack.Screen name='Sign In' component={SignIn} />
             <Stack.Screen name='Sign Up' component={SignUp} />
         </Stack.Navigator>
