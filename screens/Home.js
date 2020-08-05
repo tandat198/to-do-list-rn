@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator } from "react-native";
-import { Text, Button, Overlay, Input, Divider, Image } from "react-native-elements";
+import { Text, Button, Overlay, Input, Divider } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { getTasks, createTask, clearErrors } from "../redux/actions";
 import TaskItem from "../components/TaskItem";
+import BottomToTopView from "../components/BottomToTopView";
 
 export default function Home() {
     const [visibleCreateOverlay, setVisibleCreateOverlay] = useState(false);
@@ -78,27 +79,46 @@ export default function Home() {
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <Text style={styles.title} h2>
+                <Text style={styles.title} h2 h2Style={{ fontWeight: "400" }}>
                     My Tasks
                 </Text>
             </View>
-            <Divider style={{ marginVertical: 10, marginHorizontal: 20 }} />
-            <View style={{ paddingHorizontal: 20 }}>
-                <Button
-                    onPress={toggleOverlayCreate}
-                    icon={<Icon name='plus' size={15} color='white' />}
-                    title='Add Task  '
-                    iconRight
-                />
-            </View>
-
-            {isLoading ? <Text style={{ textAlign: "center" }}>Loading...</Text> : null}
             <SafeAreaView style={styles.list}>
-                <FlatList
-                    keyExtractor={(item) => item.id}
-                    data={tasks}
-                    renderItem={({ item, index }) => <TaskItem item={item} index={index} />}
-                />
+                <View
+                    style={{
+                        width: 70,
+                        height: 70,
+                        position: "absolute",
+                        bottom: 0,
+                        left: "50%",
+                        translateX: -35,
+                        zIndex: 2,
+                    }}
+                >
+                    {isLoading ? null : (
+                        <BottomToTopView height={70}>
+                            <Button
+                                buttonStyle={{ borderRadius: 140, width: 70, height: 70 }}
+                                onPress={toggleOverlayCreate}
+                                icon={<Icon name='plus' size={25} color='white' />}
+                                iconRight
+                            />
+                        </BottomToTopView>
+                    )}
+                </View>
+                {isLoading ? (
+                    <View style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <ActivityIndicator size={60} color='#878787' />
+                    </View>
+                ) : tasks.length > 0 ? (
+                    <FlatList
+                        keyExtractor={(item) => item.id}
+                        data={tasks}
+                        renderItem={({ item, index }) => <TaskItem item={item} index={index} />}
+                    />
+                ) : (
+                    <Text style={{ textAlign: "center", fontSize: 18 }}>You don't have any task</Text>
+                )}
             </SafeAreaView>
             {errors.getDataFail ? (
                 <View>
@@ -153,7 +173,7 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 30,
+        marginTop: 40,
     },
     title: {
         marginLeft: 20,
@@ -162,9 +182,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     list: {
-        marginTop: 20,
-        paddingVertical: 10,
         flex: 1,
+        marginTop: 5,
     },
     listItem: {
         flexDirection: "row",

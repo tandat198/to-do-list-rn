@@ -1,33 +1,37 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Button, ListItem } from "react-native-elements";
 import { useDispatch } from "react-redux";
 import { signOut } from "../redux/actions";
 
-export default function Setting() {
+export default function Account({ navigation }) {
     const dispatch = useDispatch();
     const list = [
         {
             title: "Account Info",
             icon: "person",
+            to: "Account Info",
         },
         {
             title: "Setting",
             icon: "settings",
+            to: "Setting",
         },
     ];
+
     return (
-        <View style={styles.container}>
+        <View>
             {list.map((item, i) => (
-                <ListItem key={i} title={item.title} leftIcon={{ name: item.icon }} bottomDivider chevron />
+                <ListItem
+                    onPress={() => navigation.navigate(item.to)}
+                    key={i}
+                    title={item.title}
+                    leftIcon={{ name: item.icon }}
+                    bottomDivider
+                    chevron
+                />
             ))}
             <Button type='clear' title='Log Out' onPress={() => dispatch(signOut())} />
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginTop: 30,
-    },
-});
