@@ -11,7 +11,6 @@ export default function Home() {
     const [visibleCreateOverlay, setVisibleCreateOverlay] = useState(false);
     const [taskName, setTaskName] = useState("");
     const [nameErrorMessage, setNameErrorMessage] = useState("");
-    const [bottomMessage, setBottomMessage] = useState("");
 
     const dispatch = useDispatch();
 
@@ -20,9 +19,6 @@ export default function Home() {
     const isCreating = useSelector((state) => state.isCreating);
     const isSuccess = useSelector((state) => state.isSuccess);
     const errors = useSelector((state) => state.errors);
-    const isUpdating = useSelector((state) => state.isUpdating);
-    const isDeleting = useSelector((state) => state.isDeleting);
-    const [imgUrl, setImgUrl] = useState("");
 
     const toggleOverlayCreate = () => {
         if (visibleCreateOverlay) {
