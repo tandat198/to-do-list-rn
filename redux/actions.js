@@ -70,7 +70,7 @@ export const updateTask = (id, index, data) => async (dispatch) => {
 export const deleteTask = (id) => async (dispatch) => {
     dispatch({ type: actionTypes.DELETE_TODO_START, payload: id });
 
-    const res = await api.delete(`https://code-class.herokuapp.com/api/tasks/${id}`);
+    const res = await api.delete(`/tasks/${id}`);
 
     if (res.status === 200) {
         dispatch({
