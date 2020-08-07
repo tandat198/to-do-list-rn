@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text } from "react-native";
-import { ListItem } from "react-native-elements";
+import { View } from "react-native";
+import { ListItem, Button } from "react-native-elements";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 
-export default function AccountInfo() {
+export default function AccountInfo({ navigation }) {
     const currentUser = useSelector((state) => state.currentUser);
     const list = [
         {
@@ -30,6 +30,7 @@ export default function AccountInfo() {
             {list.map((l, i) => (
                 <ListItem key={i} title={l.title} subtitle={l.subtitle} bottomDivider />
             ))}
+            <Button type='clear' title='Update Info' onPress={() => navigation.navigate("Update User Info")} />
         </View>
     );
 }

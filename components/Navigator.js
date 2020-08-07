@@ -5,17 +5,21 @@ import Account from "../screens/Account";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
 import AccountInfo from "../screens/AccountInfo";
+import UpdateUserInfo from "../screens/UpdateUserInfo";
 import Setting from "../screens/Setting";
 import { useDispatch, useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { checkUser } from "../redux/actions";
+import { checkUser, setTheme } from "../redux/actions";
 import { AppLoading } from "expo";
+import SetAppBackground from "../screens/SetAppBackground";
+import { AsyncStorage } from "react-native";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function Navigator() {
+    const theme = useSelector((state) => state.theme);
     const isAuthenticated = useSelector((state) => state.isAuthenticated);
     const currentUser = useSelector((state) => state.currentUser);
     const checkedUser = useSelector((state) => state.checkedUser);
@@ -42,7 +46,7 @@ export default function Navigator() {
                 },
             })}
             tabBarOptions={{
-                activeTintColor: "#2089DC",
+                activeTintColor: "#2089dc",
                 inactiveTintColor: "gray",
             }}
         >
@@ -52,7 +56,14 @@ export default function Navigator() {
     );
 
     useEffect(() => {
+        async function checkTheme() {
+            const theme = await AsyncStorage.getItem("theme");
+            if (theme) {
+                dispatch(setTheme(theme));
+            }
+        }
         dispatch(checkUser());
+        checkTheme();
     }, [dispatch]);
 
     if (!checkedUser) return <SplashScreen />;
@@ -82,12 +93,14 @@ export default function Navigator() {
                     return {
                         title,
                         headerShown,
-                        headerStyle: { backgroundColor: "#2089dc" },
+                        headerStyle: { backgroundColor: theme },
                     };
                 }}
             />
             <Stack.Screen component={AccountInfo} name='Account Info' />
             <Stack.Screen component={Setting} name='Setting' />
+            <Stack.Screen component={UpdateUserInfo} name='Update User Info' />
+            <Stack.Screen component={SetAppBackground} name='Set App Background' />
         </Stack.Navigator>
     ) : (
         <Stack.Navigator>

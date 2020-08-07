@@ -60,7 +60,6 @@ export default function SignIn({ navigation }) {
 
     if (isAuthenticated) {
         navigation.navigate("Home");
-        return null;
     }
 
     return (

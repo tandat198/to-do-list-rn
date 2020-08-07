@@ -10,9 +10,7 @@ import dayjs from "dayjs";
 export default function SignUp({ navigation }) {
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
-    const [date, setDate] = useState(
-        new Date(new Date().getFullYear() - 10, new Date().getMonth(), new Date().getDate())
-    );
+    const [date, setDate] = useState(new Date());
     const [pickedDate, setPickedDate] = useState(false);
     const [tel, setTel] = useState("");
     const [password, setPassword] = useState("");
@@ -42,7 +40,16 @@ export default function SignUp({ navigation }) {
 
     const submitSignUp = () => {
         if (email.length > 0 && password.length > 0 && name.length >= 2 && confirmPassword.length > 0) {
-            dispatch(signUp({ email, password, confirmPassword, name, phoneNumber: tel, dateOfBirth: date }));
+            dispatch(
+                signUp({
+                    email,
+                    password,
+                    confirmPassword,
+                    name,
+                    phoneNumber: tel,
+                    dateOfBirth: pickedDate ? date : null,
+                })
+            );
             setEmailErrorMessage("");
             setPasswordErrorMessage("");
             setConfirmPasswordErrorMessage("");
@@ -111,7 +118,6 @@ export default function SignUp({ navigation }) {
 
     if (isAuthenticated) {
         navigation.navigate("Home");
-        return null;
     }
 
     return (

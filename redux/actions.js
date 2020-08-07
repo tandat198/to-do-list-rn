@@ -124,6 +124,7 @@ export const signOut = () => async (dispatch) => {
 };
 
 export const signUp = (user) => async (dispatch) => {
+    console.log(user);
     dispatch({
         type: actionTypes.SIGN_UP_START,
     });
@@ -160,4 +161,30 @@ export const checkUser = () => async (dispatch) => {
         await AsyncStorage.removeItem("token");
         dispatch({ type: actionTypes.SET_USER_FAIL });
     }
+};
+
+export const updateUserInfo = (userInfo) => async (dispatch) => {
+    dispatch({ type: actionTypes.UPDATE_USER_START });
+    const res = await api.put("/auth", userInfo);
+
+    if (res.status === 200) {
+        const { token } = res.data;
+        const user = jwt_decode(token);
+
+        await AsyncStorage.setItem("token", token);
+        dispatch({
+            type: actionTypes.UPDATE_USER_SUCCESS,
+            payload: user,
+        });
+    } else {
+        dispatch({ type: actionTypes.UPDATE_USER_FAILURE, payload: res.data });
+    }
+};
+
+export const setTheme = (theme) => (dispatch) => {
+    console.log(theme);
+    dispatch({
+        type: actionTypes.SET_THEME,
+        payload: theme,
+    });
 };

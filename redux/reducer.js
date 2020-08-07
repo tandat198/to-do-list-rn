@@ -11,6 +11,7 @@ const INITIAL_STATE = {
     isUpdating: {},
     isDeleting: {},
     checkedUser: false,
+    theme: "#2089dc",
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -59,6 +60,7 @@ export default function (state = INITIAL_STATE, action) {
                 ...state,
                 errors: {},
                 isLoading: false,
+                isSuccess: false,
             };
         case actionTypes.UPDATE_TODO_START:
             return {
@@ -165,6 +167,29 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 checkedUser: true,
+            };
+        case actionTypes.UPDATE_USER_START:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case actionTypes.UPDATE_USER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                currentUser: action.payload,
+                isSuccess: true,
+            };
+        case actionTypes.UPDATE_USER_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                errors: action.payload,
+            };
+        case actionTypes.SET_THEME:
+            return {
+                ...state,
+                theme: action.payload,
             };
         default:
             return state;

@@ -28,3 +28,9 @@ export const SIGN_UP_FAILURE = "SIGN_UP_FAILURE";
 
 export const SET_USER = "SET_USER";
 export const SET_USER_FAIL = "SET_USER_FAIL";
+
+export const UPDATE_USER_START = "UPDATE_USER_START";
+export const UPDATE_USER_SUCCESS = "UPDATE_USER_SUCCESS";
+export const UPDATE_USER_FAILURE = "UPDATE_USER_FAILURE";
+
+export const SET_THEME = "SET_THEME";
