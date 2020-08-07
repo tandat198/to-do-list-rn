@@ -66,16 +66,6 @@ export default function Home() {
         }
     }, [errors.name]);
 
-    useEffect(() => {
-        if (isDeleting) {
-            setBottomMessage("Removing ...");
-        } else if (isUpdating) {
-            setBottomMessage("Updating ...");
-        } else {
-            setBottomMessage("");
-        }
-    }, [isDeleting, isUpdating]);
-
     return (
         <SafeAreaView style={styles.container}>
             <View>
@@ -123,19 +113,6 @@ export default function Home() {
             {errors.getDataFail ? (
                 <View>
                     <Button onPress={() => dispatch(getTasks())} title='Reload' />
-                </View>
-            ) : null}
-            {isUpdating || isDeleting ? (
-                <View
-                    style={{
-                        position: "absolute",
-                        bottom: 0,
-                        backgroundColor: "#2089DC",
-                        paddingVertical: 10,
-                        width: "100%",
-                    }}
-                >
-                    <Text style={{ textAlign: "center" }}>{bottomMessage}</Text>
                 </View>
             ) : null}
             <Overlay

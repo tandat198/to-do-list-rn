@@ -48,6 +48,7 @@ export const clearErrors = () => ({ type: actionTypes.CLEAR_ERRORS });
 export const updateTask = (id, index, data) => async (dispatch) => {
     dispatch({
         type: actionTypes.UPDATE_TODO_START,
+        payload: id,
     });
 
     const res = await api.patch(`/tasks/${id}`, data);
@@ -58,15 +59,16 @@ export const updateTask = (id, index, data) => async (dispatch) => {
             payload: {
                 data,
                 index,
+                id,
             },
         });
     } else {
-        dispatch({ type: actionTypes.UPDATE_TODO_FAILURE, payload: res.data });
+        dispatch({ type: actionTypes.UPDATE_TODO_FAILURE, payload: { data: res.data, id } });
     }
 };
 
 export const deleteTask = (id) => async (dispatch) => {
-    dispatch({ type: actionTypes.DELETE_TODO_START });
+    dispatch({ type: actionTypes.DELETE_TODO_START, payload: id });
 
     const res = await api.delete(`https://code-class.herokuapp.com/api/tasks/${id}`);
 
@@ -78,7 +80,10 @@ export const deleteTask = (id) => async (dispatch) => {
     } else {
         dispatch({
             type: actionTypes.DELETE_TODO_FAILURE,
-            payload: res.data,
+            payload: {
+                errors: res.data,
+                id,
+            },
         });
     }
 };

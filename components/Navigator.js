@@ -82,6 +82,7 @@ export default function Navigator() {
                     return {
                         title,
                         headerShown,
+                        headerStyle: { backgroundColor: "#2089dc" },
                     };
                 }}
             />

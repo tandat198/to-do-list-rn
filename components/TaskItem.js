@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, Animated, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { Text, CheckBox, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { connect } from "react-redux";
@@ -14,26 +14,42 @@ class TaskList extends PureComponent {
     };
 
     render() {
-        const { item, index } = this.props;
+        const { item, index, isUpdating, isDeleting } = this.props;
 
         return (
             <View style={styles.listItem}>
                 <View style={styles.leftItem}>
-                    <CheckBox
-                        onPress={() => this.submitUpdateStatus(item.id, index, !item.isDone)}
-                        style={styles.checkBox}
-                        checked={item.isDone}
-                    />
-                    <Text style={{ textAlignVertical: "center" }} h4>
-                        {item.name}
-                    </Text>
+                    {isUpdating[item.id] ? (
+                        <View style={styles.loadingIcon}>
+                            <ActivityIndicator size={24} color='#2089dc' />
+                        </View>
+                    ) : (
+                        <CheckBox
+                            onPress={() => this.submitUpdateStatus(item.id, index, !item.isDone)}
+                            style={styles.checkBox}
+                            checked={item.isDone}
+                        />
+                    )}
+                    <TouchableWithoutFeedback onPress={() => console.log("touched")}>
+                        <View style={{ width: "90%", justifyContent: "center" }}>
+                            <Text style={{ textAlignVertical: "center" }} h4>
+                                {item.name}
+                            </Text>
+                        </View>
+                    </TouchableWithoutFeedback>
                 </View>
                 <View style={styles.rightItem}>
-                    <Button
-                        type='clear'
-                        icon={<Icon name='times' size={15} color='black' />}
-                        onPress={() => this.submitDelTask(item.id)}
-                    />
+                    {isDeleting[item.id] ? (
+                        <View style={styles.loadingIcon}>
+                            <ActivityIndicator size={24} color='#000' />
+                        </View>
+                    ) : (
+                        <Button
+                            type='clear'
+                            icon={<Icon name='times' size={15} color='black' />}
+                            onPress={() => this.submitDelTask(item.id)}
+                        />
+                    )}
                 </View>
             </View>
         );
@@ -59,6 +75,12 @@ const styles = StyleSheet.create({
     rightItem: {
         width: "10%",
     },
+    loadingIcon: { marginVertical: 5, marginHorizontal: 10, padding: 10 },
+});
+
+const mapStateToProps = (state) => ({
+    isUpdating: state.isUpdating,
+    isDeleting: state.isDeleting,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -66,4 +88,4 @@ const mapDispatchToProps = (dispatch) => ({
     deleteTaskReq: (id) => dispatch(deleteTask(id)),
 });
 
-export default connect(null, mapDispatchToProps)(TaskList);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList);

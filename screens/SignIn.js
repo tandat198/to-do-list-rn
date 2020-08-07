@@ -11,6 +11,7 @@ export default function SignIn({ navigation }) {
     const [password, setPassword] = useState("");
     const [emailErrorMessage, setEmailErrorMessage] = useState("");
     const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+
     const isAuthenticated = useSelector((state) => state.isAuthenticated);
     const errors = useSelector((state) => state.errors);
     const isLoading = useSelector((state) => state.isLoading);
@@ -68,13 +69,14 @@ export default function SignIn({ navigation }) {
             <View style={styles.emailInput}>
                 <Input
                     autoCompleteType='email'
+                    keyboardType='email-address'
                     label='Email'
                     placeholder='Your Email'
                     renderErrorMessage={emailErrorMessage ? true : false}
                     errorMessage={emailErrorMessage}
                     maxLength={30}
                     autoCapitalize='none'
-                    onChangeText={(text) => setEmail(text.trimEnd())}
+                    onChangeText={(text) => setEmail(text)}
                     value={email}
                 />
             </View>
@@ -104,11 +106,12 @@ export default function SignIn({ navigation }) {
                 <Button
                     disabled={isLoading}
                     loading={isLoading}
-                    onPress={submitSignIn}
                     loadingStyle={{ height: 26 }}
+                    loadingProps={{ size: "large" }}
                     titleStyle={styles.buttonTitleStyle}
-                    style={styles.buttonStyle}
                     title='Sign In'
+                    onPress={submitSignIn}
+                    style={styles.buttonStyle}
                 />
             </View>
             <View style={styles.navigateContainer}>

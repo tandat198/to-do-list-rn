@@ -8,8 +8,8 @@ const INITIAL_STATE = {
     isCreating: false,
     errors: {},
     isSuccess: false,
-    isUpdating: false,
-    isDeleting: false,
+    isUpdating: {},
+    isDeleting: {},
     checkedUser: false,
 };
 
@@ -63,11 +63,14 @@ export default function (state = INITIAL_STATE, action) {
         case actionTypes.UPDATE_TODO_START:
             return {
                 ...state,
-                isUpdating: true,
+                isUpdating: {
+                    ...state.isUpdating,
+                    [action.payload]: true,
+                },
             };
         case actionTypes.UPDATE_TODO_SUCCESS:
             const tasks = state.tasks;
-            const { data, index } = action.payload;
+            const { data, index, id } = action.payload;
 
             tasks[index] = {
                 ...tasks[index],
@@ -77,24 +80,36 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 tasks: tasks.concat([]),
-                isUpdating: false,
+                isUpdating: {
+                    ...state.isUpdating,
+                    [id]: false,
+                },
             };
         case actionTypes.DELETE_TODO_START:
             return {
                 ...state,
-                isDeleting: true,
+                isDeleting: {
+                    ...state.isDeleting,
+                    [action.payload]: true,
+                },
             };
         case actionTypes.DELETE_TODO_SUCCESS:
             return {
                 ...state,
-                isDeleting: false,
+                isDeleting: {
+                    ...state.isDeleting,
+                    [action.payload]: false,
+                },
                 tasks: state.tasks.filter((task) => task.id !== action.payload),
             };
         case actionTypes.DELETE_TODO_FAILURE:
             return {
                 ...state,
-                isDeleting: false,
-                errors: action.payload,
+                isDeleting: {
+                    ...state.isDeleting,
+                    [action.payload.id]: false,
+                },
+                errors: action.payload.errors,
             };
         case actionTypes.SIGN_IN_START:
             return {
