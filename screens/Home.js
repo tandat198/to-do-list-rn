@@ -45,9 +45,6 @@ export default function Home() {
 
     useEffect(() => {
         dispatch(getTasks());
-        setTimeout(() => {
-            setImgUrl("https://tutorial-dnt.s3.amazonaws.com/images/a0fa6ad2-59dd-4e6f-815b-5303853f87d3.png");
-        }, 1500);
     }, [dispatch]);
 
     useEffect(() => {
