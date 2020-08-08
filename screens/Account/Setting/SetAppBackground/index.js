@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AsyncStorage, View } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux/lib/hooks/useDispatch";
-import { setTheme } from "../redux/actions";
+import { setTheme } from "../../../../redux/actions";
 
 export default function SetAppBackground({ navigation }) {
     const theme = useSelector((state) => state.theme);
@@ -11,27 +11,27 @@ export default function SetAppBackground({ navigation }) {
     const list = [
         {
             title: "Default",
-            hexCode: "#2089dc",
+            hexCode: "#1462c7",
         },
         {
-            title: "Grey",
-            hexCode: "#616161",
+            title: "Moonlit Blue",
+            hexCode: "#586e8b",
         },
         {
-            title: "Pirple",
-            hexCode: "#c80afc",
+            title: "Lavender Pirple",
+            hexCode: "#967bb6",
         },
         {
-            title: "Pink",
-            hexCode: "#ff40b6",
+            title: "Venus Pink",
+            hexCode: "#f9c3c3",
         },
         {
-            title: "Green",
-            hexCode: "#009e32",
+            title: "Emerald Green",
+            hexCode: "#50c878",
         },
         {
-            title: "Orange",
-            hexCode: "#ffab3d",
+            title: "Burnt Orange",
+            hexCode: "#ff7034",
         },
     ];
 

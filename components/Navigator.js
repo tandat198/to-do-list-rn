@@ -4,16 +4,18 @@ import Home from "../screens/Home";
 import Account from "../screens/Account";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
-import AccountInfo from "../screens/AccountInfo";
-import UpdateUserInfo from "../screens/UpdateUserInfo";
-import Setting from "../screens/Setting";
+import AccountInfo from "../screens/Account/AccountInfo";
+import UpdateUserInfo from "../screens/Account/AccountInfo/UpdateUserInfo";
+import Setting from "../screens/Account/Setting";
+import SetAppBackground from "../screens/Account/Setting/SetAppBackground";
 import { useDispatch, useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { checkUser, setTheme } from "../redux/actions";
 import { AppLoading } from "expo";
-import SetAppBackground from "../screens/SetAppBackground";
 import { AsyncStorage } from "react-native";
+import ChangePassword from "../screens/Account/Setting/ChangePassword";
+import Tutorials from "../screens/Tutorials";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,6 +41,8 @@ export default function Navigator() {
                         iconName = focused ? "home" : "home-outline";
                     } else if (route.name === "Account") {
                         iconName = focused ? "account" : "account-outline";
+                    } else if (route.name === "Tutorials") {
+                        iconName = focused ? "book" : "book-outline";
                     }
 
                     // You can return any component that you like here!
@@ -46,10 +50,11 @@ export default function Navigator() {
                 },
             })}
             tabBarOptions={{
-                activeTintColor: "#2089dc",
+                activeTintColor: theme,
                 inactiveTintColor: "gray",
             }}
         >
+            <Tab.Screen name='Tutorials' component={Tutorials} />
             <Tab.Screen name='Home' component={Home} />
             <Tab.Screen name='Account' component={Account} />
         </Tab.Navigator>
@@ -101,6 +106,7 @@ export default function Navigator() {
             <Stack.Screen component={Setting} name='Setting' />
             <Stack.Screen component={UpdateUserInfo} name='Update User Info' />
             <Stack.Screen component={SetAppBackground} name='Set App Background' />
+            <Stack.Screen component={ChangePassword} name='Change Password' />
         </Stack.Navigator>
     ) : (
         <Stack.Navigator>

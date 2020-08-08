@@ -1,14 +1,14 @@
 import * as actionTypes from "./actionTypes";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { AsyncStorage } from "react-native";
 import BaseApi from "../api";
 
 const api = BaseApi();
 
-export const getTasks = () => async (dispatch) => {
+export const getTasks = (isRefreshing = false) => async (dispatch) => {
     dispatch({
         type: actionTypes.GET_TODOS_START,
+        payload: { isRefreshing },
     });
 
     const res = await api.get("/tasks");
@@ -16,7 +16,10 @@ export const getTasks = () => async (dispatch) => {
     if (res.status === 200) {
         dispatch({
             type: actionTypes.GET_TODOS_SUCCESS,
-            payload: res.data,
+            payload: {
+                data: res.data,
+                isRefreshing,
+            },
         });
     } else {
         dispatch({ type: actionTypes.GET_TODOS_FAILURE });
@@ -124,7 +127,6 @@ export const signOut = () => async (dispatch) => {
 };
 
 export const signUp = (user) => async (dispatch) => {
-    console.log(user);
     dispatch({
         type: actionTypes.SIGN_UP_START,
     });
@@ -182,9 +184,33 @@ export const updateUserInfo = (userInfo) => async (dispatch) => {
 };
 
 export const setTheme = (theme) => (dispatch) => {
-    console.log(theme);
     dispatch({
         type: actionTypes.SET_THEME,
         payload: theme,
     });
+};
+
+export const changePassword = (passwords) => async (dispatch) => {
+    dispatch({
+        type: actionTypes.CHANGE_PASSWORD_START,
+    });
+
+    const res = await api.patch("/auth/change-password", passwords);
+    if (res.status === 200) {
+        dispatch({
+            type: actionTypes.CHANGE_PASSWORD_SUCCESS,
+        });
+    } else {
+        dispatch({
+            type: actionTypes.CHANGE_PASSWORD_FAILURE,
+            payload: res.data,
+        });
+    }
+};
+
+export const getTutorials = () => async (dispatch) => {
+    dispatch({
+        type: actionTypes.GET_TUTORIALS_START,
+    });
+    const res = await api.get("/tutorials");
 };

@@ -3,7 +3,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialIcons";
 import { Input, Button, Text } from "react-native-elements";
 import { StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, signIn } from "../redux/actions";
+import { clearErrors, signIn } from "../../redux/actions";
 
 export default function SignIn({ navigation }) {
     const [visibilityPass, setVisibilityPass] = useState(false);

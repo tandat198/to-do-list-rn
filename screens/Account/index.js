@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { Button, ListItem } from "react-native-elements";
 import { useDispatch } from "react-redux";
-import { signOut } from "../redux/actions";
+import { signOut } from "../../redux/actions";
 
 export default function Account({ navigation }) {
     const dispatch = useDispatch();

@@ -5,6 +5,8 @@ const INITIAL_STATE = {
     isAuthenticated: false,
     tasks: [],
     isLoading: false,
+    loaded: false,
+    isRefreshing: false,
     isCreating: false,
     errors: {},
     isSuccess: false,
@@ -19,19 +21,22 @@ export default function (state = INITIAL_STATE, action) {
         case actionTypes.GET_TODOS_START:
             return {
                 ...state,
-                isLoading: true,
-                tasks: [],
+                [action.payload.isRefreshing ? "isRefreshing" : "isLoading"]: true,
+                loaded: false,
+                tasks: action.payload.isRefreshing ? state.tasks : [],
             };
         case actionTypes.GET_TODOS_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
-                tasks: action.payload,
+                [action.payload.isRefreshing ? "isRefreshing" : "isLoading"]: false,
+                loaded: true,
+                tasks: action.payload.data,
             };
         case actionTypes.GET_TODOS_FAILURE:
             return {
                 ...state,
-                isLoading: false,
+                [action.payload.isRefreshing ? "isRefreshing" : "isLoading"]: false,
+                loaded: true,
                 errors: { getDataFail: true },
             };
         case actionTypes.CREATE_TODO_START:
@@ -190,6 +195,23 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 theme: action.payload,
+            };
+        case actionTypes.CHANGE_PASSWORD_START:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case actionTypes.CHANGE_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                isSuccess: true,
+            };
+        case actionTypes.CHANGE_PASSWORD_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                errors: action.payload,
             };
         default:
             return state;

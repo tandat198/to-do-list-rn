@@ -3,7 +3,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialIcons";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { Input, Button, Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { signUp, clearErrors } from "../redux/actions";
+import { signUp, clearErrors } from "../../redux/actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 

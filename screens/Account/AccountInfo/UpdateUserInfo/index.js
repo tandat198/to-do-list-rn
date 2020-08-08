@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialIcons";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import { Input, Button, Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, updateUserInfo } from "../redux/actions";
+import { clearErrors, updateUserInfo } from "../../../../redux/actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 
@@ -16,6 +16,7 @@ export default function UpdateUserInfo({ navigation }) {
 
     const [nameErrorMessage, setNameErrorMessage] = useState("");
     const [telErrorMessage, setTelErrorMessage] = useState("");
+    const [dateOfBirthErrorMessage, setDateOfBirthErrorMessage] = useState("");
 
     const currentUser = useSelector((state) => state.currentUser);
     const isSuccess = useSelector((state) => state.isSuccess);
@@ -34,14 +35,28 @@ export default function UpdateUserInfo({ navigation }) {
     };
 
     const submitUpdate = () => {
-        if (name.length >= 2) {
-            dispatch(updateUserInfo({ name, phoneNumber: tel, dateOfBirth: pickedDate ? date : null }));
+        if (name.length >= 2 && tel && (pickedDate || currentUser.dateOfBirth)) {
+            dispatch(
+                updateUserInfo({ name, phoneNumber: tel, dateOfBirth: pickedDate ? date : currentUser.dateOfBirth })
+            );
             setTelErrorMessage("");
+            setNameErrorMessage("");
+            setDateOfBirthErrorMessage("");
         } else {
             if (name.length < 2) {
                 setNameErrorMessage("Name is required");
             } else {
                 setNameErrorMessage("");
+            }
+            if (!pickedDate && !currentUser.dateOfBirth) {
+                setDateOfBirthErrorMessage("Date of Birth is required");
+            } else {
+                setDateOfBirthErrorMessage("");
+            }
+            if (!tel) {
+                setTelErrorMessage("Phone Number is required");
+            } else {
+                setTelErrorMessage("");
             }
         }
     };
@@ -50,9 +65,9 @@ export default function UpdateUserInfo({ navigation }) {
         setName(currentUser.name);
         setTel(currentUser.phoneNumber);
         if (currentUser.dateOfBirth) {
-            setBirthDate(currentUser.dateOfBirth);
+            setDate(currentUser.dateOfBirth);
         }
-    }, []);
+    }, [currentUser]);
 
     useEffect(() => {
         return () => {
@@ -66,12 +81,15 @@ export default function UpdateUserInfo({ navigation }) {
         }
     }, [errors.phoneNumber]);
 
-    if (isSuccess) {
-        navigation.goBack();
-    }
+    useEffect(() => {
+        if (isSuccess) {
+            navigation.goBack();
+            Alert.alert("Success", "You updated your info successfully!", [{ text: "OK" }]);
+        }
+    }, [isSuccess]);
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.nameInput}>
                 <Input
                     autoCompleteType='name'
@@ -110,14 +128,18 @@ export default function UpdateUserInfo({ navigation }) {
                     alignItems: "flex-start",
                 }}
             />
-
+            {dateOfBirthErrorMessage ? (
+                <Text style={{ color: "#ff190c", margin: 5, marginLeft: 15, fontSize: 12 }}>
+                    {dateOfBirthErrorMessage}
+                </Text>
+            ) : null}
             {showPickerDate ? (
                 <DateTimePicker
                     testID='dateTimePicker'
                     mode='date'
                     display='default'
                     maximumDate={new Date(new Date().getFullYear() - 10, new Date().getMonth(), new Date().getDate())}
-                    value={date}
+                    value={new Date(new Date().getFullYear() - 10, new Date().getMonth(), new Date().getDate())}
                     onChange={setBirthDate}
                 />
             ) : null}
@@ -146,7 +168,7 @@ export default function UpdateUserInfo({ navigation }) {
                     title='Update'
                 />
             </View>
-        </ScrollView>
+        </View>
     );
 }
 

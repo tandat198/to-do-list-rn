@@ -14,14 +14,14 @@ class TaskList extends PureComponent {
     };
 
     render() {
-        const { item, index, isUpdating, isDeleting } = this.props;
+        const { item, index, isUpdating, isDeleting, toggleOverlayUpdate } = this.props;
 
         return (
             <View style={styles.listItem}>
                 <View style={styles.leftItem}>
                     {isUpdating[item.id] ? (
                         <View style={styles.loadingIcon}>
-                            <ActivityIndicator size={24} color='#2089dc' />
+                            <ActivityIndicator size={24} color='#1462c7' />
                         </View>
                     ) : (
                         <CheckBox
@@ -30,7 +30,7 @@ class TaskList extends PureComponent {
                             checked={item.isDone}
                         />
                     )}
-                    <TouchableWithoutFeedback onPress={() => console.log("touched")}>
+                    <TouchableWithoutFeedback onPress={() => toggleOverlayUpdate(item)}>
                         <View style={{ width: "90%", justifyContent: "center" }}>
                             <Text style={{ textAlignVertical: "center" }} h4>
                                 {item.name}
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     leftItem: {
         width: "90%",
         flexDirection: "row",
+        paddingRight: 30,
     },
     rightItem: {
         width: "10%",
